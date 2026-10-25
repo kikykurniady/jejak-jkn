@@ -18,7 +18,15 @@ python3 -m venv .venv
 .venv/bin/python -m jejak ml --data data   # process mining + graph + Isolation Forest + XGBoost/SHAP vs aturan
 ```
 
-Perintah terpisah: `generate`, `validate`, `rules`, `evaluate`, `ml` (lihat `python -m jejak -h`).
+**Demo dashboard auditor (satu perintah):**
+
+```bash
+.venv/bin/pip install -e ".[app]"
+.venv/bin/python -m jejak demo            # buat data + skor bila belum ada (±30 detik), lalu buka http://localhost:8501
+.venv/bin/python -m jejak demo --rebuild  # buat ulang data dan skor
+```
+
+Perintah terpisah: `generate`, `validate`, `rules`, `evaluate`, `ml`, `demo` (lihat `python -m jejak -h`).
 Hasil di `data/` (tidak di-commit): `claims.csv`, `labels.csv`, `facilities.csv`, `participants.csv`,
 `rule_hits.csv` (satu baris per alasan), `rule_scores.csv` (satu baris per klaim, terurut skor).
 
@@ -114,3 +122,29 @@ Keluaran di `data/`: `risk_scores.csv` (skor + alasan semua engine), `graph_edge
 - PR-AUC dihitung dengan ties sebagai satu ambang, sehingga baseline aturan kini 0,936 (sebelumnya 0,946
   bergantung pada urutan baris).
 - PM4Py berlisensi AGPL v3.
+
+## Auditor workspace (`python -m jejak demo`)
+
+Dashboard Streamlit (`app.py`, logika di `workspace.py`) berbahasa Indonesia. Prinsip: **risiko tinggi ≠ fraud**;
+skor hanya mengurutkan klaim, keputusan akhir di tangan auditor.
+
+| Halaman | Isi |
+|---|---|
+| Antrean risiko | klaim urut skor gabungan (lalu nominal), prioritas Tinggi/Sedang/Rendah, dugaan pola, alasan utama; filter prioritas, pola, faskes, status keputusan, cari ID |
+| Detail kasus | data klaim, komposisi skor (sinyal × bobot per engine), reason code aturan + alasan SHAP XGBoost/Isolation Forest + process mining + graph, timeline riwayat peserta dan alur episode, graf hubungan klaim–peserta–faskes, form keputusan |
+| Ringkasan & keputusan | sebaran prioritas × pola, faskes teratas, log keputusan + unduh CSV |
+| Tentang skor | cara membaca skor dan bobot |
+
+**Skor gabungan sementara** (risk fusion belum dibangun): `Σ(bobot × sinyal) / Σ bobot` dengan bobot bawaan
+aturan 0,35 · XGBoost 0,20 · graph 0,20 · process 0,10 · Isolation Forest 0,15. Sinyal Isolation Forest = persentil
+≥P90 diskalakan ke 0–1. Prioritas Tinggi ≥ 0,50, Sedang ≥ 0,25. Bobot bisa diubah di sidebar. Pada 20k klaim seed 42,
+PR-AUC skor ini 0,987 dan P@1000 0,99 — tetap optimistis karena memuat XGBoost yang sirkular (lihat di atas).
+
+**Keputusan auditor** (*Valid / Need Clarification / Irregular / False Positive*) + catatan disimpan lokal ke
+`data/keputusan_auditor.csv` (log append-only; keputusan terbaru per klaim yang berlaku). Label sintetis
+disembunyikan; toggle **Mode evaluasi** di sidebar menampilkannya untuk juri/tim saja. Tautan langsung ke kasus:
+`http://localhost:8501/kasus?klaim=CLM-00001159`.
+
+| Antrean | Detail kasus | Graf kloning |
+|---|---|---|
+| ![antrean](docs/img/antrean.png) | ![detail](docs/img/detail-kasus.png) | ![graf](docs/img/graf-kloning.png) |
