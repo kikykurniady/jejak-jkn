@@ -1,4 +1,4 @@
-"""CLI: python -m jejak <generate|validate|rules|evaluate|pipeline|ml>."""
+"""CLI: python -m jejak <generate|validate|rules|evaluate|pipeline|ml|demo>."""
 from __future__ import annotations
 
 import argparse
@@ -99,6 +99,31 @@ def cmd_ml(a):
           + (", ml_report.md" if (d / "ml_report.md").exists() else ""))
 
 
+def cmd_demo(a):
+    """Satu perintah untuk demo: buat data + nilai klaim bila belum ada, lalu buka dashboard."""
+    import subprocess
+    import sys
+
+    from .workspace import missing_files
+
+    d = Path(a.data)
+    if a.rebuild or missing_files(d):
+        print(f"Menyiapkan data demo sintetis di {d}/ ({a.n:,} klaim, seed {a.seed})…")
+        a.out = str(d)
+        cmd_pipeline(a)
+        a.no_loso, a.no_eval = True, False
+        cmd_ml(a)
+    else:
+        print(f"Memakai hasil yang sudah ada di {d}/ (pakai --rebuild untuk membuat ulang).")
+    app = Path(__file__).with_name("app.py")
+    args = [sys.executable, "-m", "streamlit", "run", str(app), "--server.port", str(a.port),
+            "--browser.gatherUsageStats", "false", "--client.toolbarMode", "minimal"]
+    if a.headless:
+        args += ["--server.headless", "true"]
+    print(f"Membuka auditor workspace: http://localhost:{a.port}")
+    subprocess.run(args + ["--", "--data", str(d.resolve())], check=False)
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(prog="jejak", description="JEJAK-JKN: data sintetis, rule engine, dan model risiko")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -126,6 +151,17 @@ def main(argv=None):
     ml.add_argument("--no-loso", action="store_true", help="lewati uji leave-one-scenario-out")
     ml.add_argument("--no-eval", action="store_true", help="hanya menilai, tanpa evaluasi label")
     ml.set_defaults(fn=cmd_ml)
+    dm = sub.add_parser("demo", help="siapkan data sintetis + skor (bila belum ada) lalu jalankan dashboard Streamlit")
+    dm.add_argument("--data", default="data")
+    dm.add_argument("--n", type=int, default=20_000)
+    dm.add_argument("--seed", type=int, default=42)
+    dm.add_argument("--n-train", type=int, default=20_000)
+    dm.add_argument("--train-seed", type=int, default=1042)
+    dm.add_argument("--threshold", type=float, default=0.5)
+    dm.add_argument("--port", type=int, default=8501)
+    dm.add_argument("--rebuild", action="store_true", help="buat ulang data dan skor")
+    dm.add_argument("--headless", action="store_true", help="jangan buka browser otomatis")
+    dm.set_defaults(fn=cmd_demo)
 
     a = p.parse_args(argv)
     a.fn(a)

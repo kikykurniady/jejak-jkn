@@ -13,12 +13,19 @@ _Terakhir diperbarui: 2026-10-25_
 - Hasil 20k klaim uji (seed 42), XGBoost dilatih di seed 1042 — PR-AUC: aturan 0,936 · process 0,444 ·
   graph 0,517 · Isolation Forest 0,877 · XGBoost 0,998 (sirkular). Leave-one-scenario-out: recall XGBoost
   pada skenario yang tidak dilatih hanya 0,03–0,37. Detail: README bagian "Engine lanjutan".
+- **Baru (branch `claude/project-thread-453ct5`, bercabang dari PR #2):** auditor workspace Streamlit —
+  antrean prioritas, detail kasus (reason code aturan + SHAP + process + graph), timeline, graf hubungan,
+  keputusan auditor tersimpan lokal. Satu perintah: `python -m jejak demo` (±30 detik dari nol). Skor yang dipakai
+  masih **skor gabungan sementara** (K019). 30 tes pytest.
 
 ## Tugas berikutnya
 - [ ] Review & merge PR model risiko / process mining / graph
 - [ ] **Risk fusion**: gabungkan aturan + Isolation Forest + process + graph (+ XGBoost bila pola sudah dilabeli) jadi satu skor dan satu daftar alasan
 - [ ] Skenario lebih sulit/variatif agar evaluasi tidak sirkular (cloning nominal sedikit beda, phantom dengan konsultasi FKTP palsu, episode suntikan yang menempel ke episode lama)
-- [ ] Streamlit auditor workspace (risk queue, detail kasus, timeline proses, graf, reason code, keputusan auditor)
+- [x] Streamlit auditor workspace (risk queue, detail kasus, timeline proses, graf, reason code, keputusan auditor) — PR dashboard
+- [ ] Merge PR dashboard setelah PR #2 (PR dashboard bercabang dari PR #2)
+- [ ] Ganti skor gabungan sementara dengan risk fusion; pakai log keputusan auditor sebagai label umpan balik
+- [ ] Latihan demo: skenario cerita 3 kasus (repeat, phantom, cloning) untuk presentasi juri
 - [ ] Selaraskan kolom dengan data sampel resmi BPJS (FKRTL 55 variabel)
 - [ ] Lengkapi proposal bagian 6–9, cakupan **Cloning**, dan tabel hasil evaluasi jujur
 - [ ] Cari statistik publik JKN yang terverifikasi untuk proposal
