@@ -3,21 +3,24 @@ _Terakhir diperbarui: 2026-10-25_
 
 ## Posisi sekarang
 - Proposal: bagian 1–5 selesai (draf), 6–9 belum.
-- Repo: https://github.com/kikykurniady/jejak-jkn (memori di `main`; kode di branch `feat/generator-rule-engine`).
-- **Sudah ada:** generator data sintetis (10k–50k klaim, 6 skenario berlabel), validasi Pandera,
-  rule engine R01–R10 dengan reason code, evaluasi (P/R/F1, PR-AUC, P@K, R@K), 10 tes pytest.
-- Hasil awal (20k klaim, seed 42): precision 0,94, recall 0,93 pada ambang 0,5, PR-AUC 0,95.
-  Ini batas atas karena aturan dan skenario dibuat tim yang sama.
+- Repo: https://github.com/kikykurniady/jejak-jkn. PR #1 (generator + rule engine) sudah merge ke `main`.
+- **Sudah ada:** generator data sintetis (6 skenario berlabel), validasi Pandera, rule engine R01–R10,
+  evaluasi (P/R/F1, PR-AUC tie-aware, P@K, R@K).
+- **Baru (branch `claude/project-thread-rgp8xj`, PR menunggu review):** process mining PM4Py (`process.py`),
+  graph antar-klaim NetworkX (`graph.py`), 20 fitur (`features.py`), Isolation Forest + XGBoost + SHAP
+  dengan alasan Bahasa Indonesia (`models.py`), eksperimen jujur (`experiment.py`), CLI `python -m jejak ml`,
+  24 tes pytest.
+- Hasil 20k klaim uji (seed 42), XGBoost dilatih di seed 1042 — PR-AUC: aturan 0,936 · process 0,444 ·
+  graph 0,517 · Isolation Forest 0,877 · XGBoost 0,998 (sirkular). Leave-one-scenario-out: recall XGBoost
+  pada skenario yang tidak dilatih hanya 0,03–0,37. Detail: README bagian "Engine lanjutan".
 
 ## Tugas berikutnya
-- [ ] Push branch dan merge PR generator + rule engine
-- [ ] Similarity berbasis fitur untuk cloning/near-dup yang lebih halus (bukan hanya nominal identik)
-- [ ] Graf NetworkX peserta–faskes–episode + fitur graf
-- [ ] Isolation Forest untuk anomali; risk fusion (aturan + anomali + graf)
-- [ ] Skenario lebih sulit/variatif agar evaluasi tidak sirkular (mis. cloning dengan nominal sedikit berbeda)
+- [ ] Review & merge PR model risiko / process mining / graph
+- [ ] **Risk fusion**: gabungkan aturan + Isolation Forest + process + graph (+ XGBoost bila pola sudah dilabeli) jadi satu skor dan satu daftar alasan
+- [ ] Skenario lebih sulit/variatif agar evaluasi tidak sirkular (cloning nominal sedikit beda, phantom dengan konsultasi FKTP palsu, episode suntikan yang menempel ke episode lama)
+- [ ] Streamlit auditor workspace (risk queue, detail kasus, timeline proses, graf, reason code, keputusan auditor)
 - [ ] Selaraskan kolom dengan data sampel resmi BPJS (FKRTL 55 variabel)
-- [ ] Streamlit auditor workspace (risk queue, detail kasus, reason code)
-- [ ] Lengkapi proposal bagian 6–9 dan tambahkan cakupan **Cloning**
+- [ ] Lengkapi proposal bagian 6–9, cakupan **Cloning**, dan tabel hasil evaluasi jujur
 - [ ] Cari statistik publik JKN yang terverifikasi untuk proposal
 
 ## Pertanyaan terbuka
