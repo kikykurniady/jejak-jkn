@@ -11,6 +11,45 @@ data/
 *.parquet
 *.csv
 
+# Data sampel BPJS (K026) — repo ini PUBLIK, data asli tidak boleh masuk sama sekali.
+# Simpan data BPJS di luar repo; pola di bawah hanya jaring pengaman.
+data_bpjs/
+DataBPJS/
+*bpjs*/
+*.xlsx
+*.xls
+*.zip
+*.7z
+*.rar
+*.gz
+*.tsv
+*.txt
+!requirements*.txt
+*.sav
+*.dta
+*.feather
+*.arrow
+*.db
+*.duckdb
+*.duckdb.wal
+*.sqlite
+
+# Model terlatih & keluaran yang bisa memuat jejak data asli
+*.pkl
+*.joblib
+*.ubj
+models/
+outputs/
+reports/
+
+# Notebook bisa menyimpan output baris data; simpan di luar repo atau bersihkan dulu
+*.ipynb
+.ipynb_checkpoints/
+
+# Tes
+.coverage
+htmlcov/
+
 # OS / editor
 .DS_Store
 .idea/

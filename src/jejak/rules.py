@@ -76,7 +76,7 @@ def r_near_duplicate(df: pd.DataFrame, max_days: int = 3, amount_tol: float = 0.
 def r_repeated_procedure(df: pd.DataFrame, window: str = "90D") -> pd.DataFrame:
     key = ["participant_token", "procedure_code"]
     # Urut per kunci lalu waktu, supaya urutan hasil groupby-rolling sama dengan urutan baris
-    s = df[["claim_id", *key, "service_timestamp"]].sort_values([*key, "service_timestamp"]).assign(one=1)
+    s = df[["claim_id", *key, "service_timestamp"]].sort_values([*key, "service_timestamp", "claim_id"]).assign(one=1)
     counts = s.groupby(key).rolling(window, on="service_timestamp").one.sum()
     s["n_90d"] = counts.to_numpy()
     s["limit"] = s.procedure_code.map({c: p.max_per_90d for c, p in PROCEDURES.items()})
