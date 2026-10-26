@@ -21,6 +21,17 @@ _Terakhir diperbarui: 2026-10-26_
   keputusan auditor tersimpan lokal. Satu perintah: `python -m jejak demo` (±30 detik dari nol). Skor yang dipakai
   masih **skor gabungan sementara** (K019). 30 tes pytest.
 
+- 2026-10-26: **Tenggat video + demo 2026-11-01**; kurasi 20 finalis 2–4 Nov, Demo Day 21 Nov. Kriteria juri:
+  kreativitas (GenAI/ML), model bisnis, dampak terukur, presentasi, kesiapan produk. Rancangan perbaikan 6 hari
+  diusulkan (lihat `sesi/2026-10-26-rancangan-babak-finalis.md`).
+- 2026-10-26: **Data sampel resmi BPJS sudah diterima** (syarat ketat, K026). Metode final Hybrid Lean + Kanban (K023),
+  alat perancangan (K024), alat fraud tambahan (K025). Masih tahap perancangan; belum ada kode baru.
+- 2026-10-26: `.gitignore` diperketat (repo **PUBLIK**). Papan Kanban 21 kartu MoSCoW siap di
+  `scripts/buat_papan_kanban.py`, tertunda: pemilik harus `gh auth refresh -s project` dulu, lalu jalankan
+  `.venv/bin/python scripts/buat_papan_kanban.py`. Usulan terbuka: K024 diganti "GitHub untuk semuanya"
+  (Mermaid ganti draw.io, Lean Canvas di `docs/lean-canvas.md`) — belum dikonfirmasi pengguna.
+  Belum ada commit untuk perubahan memori/.gitignore/skrip ini.
+
 ## Tugas berikutnya
 - [ ] Review & merge PR model risiko / process mining / graph
 - [ ] **Risk fusion**: gabungkan aturan + Isolation Forest + process + graph (+ XGBoost bila pola sudah dilabeli) jadi satu skor dan satu daftar alasan
