@@ -1,5 +1,8 @@
 # Status & Tugas — Jejak JKN
-_Terakhir diperbarui: 2026-10-25_
+_Terakhir diperbarui: 2026-10-26_
+
+- 2026-10-26: laptop MacBook Intel siap dipakai (Python 3.15, `.venv` lengkap, 30/30 tes lulus). XGBoost memakai
+  libomp dari conda-forge di `.venv/lib/` (K022, langkah di README "Mac Intel").
 
 ## Posisi sekarang
 - Proposal: bagian 1–5 selesai (draf), 6–9 belum.

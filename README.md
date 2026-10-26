@@ -30,6 +30,18 @@ Perintah terpisah: `generate`, `validate`, `rules`, `evaluate`, `ml`, `demo` (li
 Hasil di `data/` (tidak di-commit): `claims.csv`, `labels.csv`, `facilities.csv`, `participants.csv`,
 `rule_hits.csv` (satu baris per alasan), `rule_scores.csv` (satu baris per klaim, terurut skor).
 
+**Mac Intel (tanpa Homebrew):** XGBoost butuh `libomp.dylib`. Homebrew tidak lagi mendukung Mac Intel,
+dan libomp bawaan scikit-learn terlalu lama untuk XGBoost 3.x. Ambil `llvm-openmp` osx-64 dari conda-forge
+(mis. `llvm-openmp-23.1.3-h8c1e6b9_0.conda`, md5 `85edbb56b37fc44b823f32d126214059`), ekstrak `lib/libomp.dylib`
+ke `.venv/lib/`, lalu arahkan XGBoost ke sana:
+
+```bash
+X=.venv/lib/python3.*/site-packages/xgboost/lib/libxgboost.dylib
+install_name_tool -add_rpath @loader_path/../../../.. $X && codesign --force -s - $X
+```
+
+Langkah `install_name_tool` perlu diulang setiap kali XGBoost dipasang ulang.
+
 ## Data sintetis (`src/jejak/generator.py`)
 
 Klaim normal dibentuk dari episode layanan: kunjungan tunggal FKTP, kontrol kronis, seri fisioterapi
